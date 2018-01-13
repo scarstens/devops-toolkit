@@ -2,7 +2,6 @@
 # emj LEMP
 export MYSQL_USER="nginx"
 export MYSQL_PASS=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
-export PUBLIC_IP=$(curl -s ident.me)
 export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-")
 export DOMAIN="ec2-$PUBLIC_IP_DASHES.us-east-2.compute.amazonaws.com"
 export GHUSERNAME=""
@@ -55,7 +54,7 @@ server {
 	# Add index.php to the list if you are using PHP
 	index index.php index.html index.htm index.nginx-debian.html;
 
-	server_name ${PUBLIC_IP};
+	server_name ${DOMAIN};
 
 	location / {
 		try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
