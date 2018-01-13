@@ -81,7 +81,7 @@ server {
 EOF
 
 # Symlink the config into the enabled Nginx dir so it loads by default
-ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress
+sudo ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress
 
 # Build SSL certs
 mkdir -p /var/www/wordpress/certs
