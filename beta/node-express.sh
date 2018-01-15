@@ -54,18 +54,30 @@ sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -
 # Build nginx reverse proxy config for node
 sudo rm /etc/nginx/sites-enabled/default
 sudo tee /etc/nginx/sites-available/nodeapp <<'EOF'
+upstream nodeapp {
+    server 127.0.0.1:3000;
+}
+
 server {
-	server_name _;
-	listen 80;
+    server_name _;
+    listen 80;
     listen 443 ssl;
-	location / {
-		proxy_pass http://127.0.0.1:3000;
-		proxy_http_version 1.1;
-		proxy_set_header Upgrade $http_upgrade;
-		proxy_set_header Connection 'upgrade';
-		proxy_set_header Host $host;
-		proxy_cache_bypass $http_upgrade;
-	}
+    root /var/www/nodeapp;
+
+    location / {
+        try_files $uri @nodeapp;
+    }
+
+    location @nodeapp {
+        proxy_pass http://nodeapp;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        # Following is necessary for Websocket support
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+    }
 }
 EOF
 ln -s /etc/nginx/sites-available/nodeapp /etc/nginx/sites-enabled/nodeapp
