@@ -46,10 +46,8 @@ pm2 list
 # Sample app runs index.js
 pm2 start --name="nodeapp" index.js
 # Startup command starts this node app in case the server restarts, on startup
-sudo pm2 startup
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
-# not sure why, but this fails the first time and works the second time
-sudo env PATH=$PATH:/usr/bin /usr/lib/node_modules/pm2/bin/pm2 startup systemd -u ubuntu --hp /home/ubuntu
+PM2_STARTUP=$(pm2 startup | grep sudo)
+eval $PM2_STARTUP
 
 # Build nginx reverse proxy config for node
 sudo rm /etc/nginx/sites-enabled/default
