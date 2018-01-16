@@ -42,6 +42,7 @@ sudo chown -R $USER:$(id -gn $USER) /home/ubuntu/.npm/_logs
 sudo npm install pm2 -g
 pm2 list
 # To run npm its like this
+git config --global push.default simple
 #sudo pm2 start npm --name="node-app" -- run dev
 # Sample app runs index.js
 pm2 start --name="nodeapp" index.js
