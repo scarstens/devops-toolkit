@@ -18,6 +18,7 @@ export DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
 sudo apt-get update
 sudo apt-get upgrade
 sudo usermod -aG www-data ubuntu
+sudo su - ubuntu
 
 sudo apt-get install nginx -y
 sudo apt-get install mariadb-server mariadb-client -y
