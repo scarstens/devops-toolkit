@@ -88,8 +88,7 @@ EOF
 # Symlink the config into the enabled Nginx dir so it loads by default
 sudo ln -s /etc/nginx/sites-available/wordpress /etc/nginx/sites-enabled/wordpress
 
-# Build SSL certs
-mkdir -p /var/www/wordpress/certs
+# Build SSL certs, mkdir above with other standard mkdir directories
 cd /var/www/wordpress/certs
 # Create cert builder script
 sudo tee /var/www/wordpress/certs/self-signed-tls.sh <<'FILE'
@@ -341,7 +340,7 @@ chown ubuntu:ubuntu /usr/local/bin/fix-wordpress-permissions
 chmod +x /usr/local/bin/fix-wordpress-permissions
 
 # We use JQ to manage json in bash
-sudo apt-get install jq
+sudo apt-get install jq -y
 
 # Make a database, if we don't already have one
 echo -e "\nCreating database '${DB_NAME}' (if it's not already there)"
