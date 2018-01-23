@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-# emj LEMP
+# TODO: handle sudo unable to resolve host
+sudo true
+## TODO: grep just the hostname out of this and store in a var
+## TODO: use the var and echo a line into the /etc/hosts file with 127.0.0.1 $VAR
+
+# LEMP
 export MYSQL_USER="nginx"
 export MYSQL_PASS=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
 export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-")
@@ -12,7 +17,7 @@ export DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
 
 sudo apt-get update
 sudo apt-get upgrade
-sudo usermod -aG www-data ubuntu
+sudo usermod -aG www-data ubuntu -y
 
 sudo apt-get install nginx -y
 sudo apt-get install mariadb-server mariadb-client -y
