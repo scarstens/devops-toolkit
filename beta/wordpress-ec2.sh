@@ -42,6 +42,7 @@ string
 sudo apt-get install php-fpm php-mysql -y
 sudo mkdir -p /var/www/wordpress/htdocs
 sudo mkdir -p /var/www/wordpress/logs
+sudo mkdir -p /var/www/wordpress/certs
 sudo touch /var/www/wordpress/logs/error.log
 sudo chown -R www-data:www-data /var/www
 sudo rm /etc/nginx/sites-enabled/default
