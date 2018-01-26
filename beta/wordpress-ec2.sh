@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
-echo "Staying up to date with apt update and upgrade"
-sudo apt-get update
-sudo apt-get upgrade -y
+alias noroot="sudo -u www-data"
+echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
+echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+
+echo "Staying up to date with apt update and upgrade..."
+sudo apt-get update 2>&1 /dev/null
+sudo apt-get upgrade -y 2>&1 /dev/null
 
 export DOMAIN=$1
 if [ -z "$DOMAIN" ] ; then
@@ -136,7 +140,7 @@ sudo chmod 775 /var/www/wordpress/htdocs
 
 echo "Downloading WordPress..."
 cd /var/www/wordpress/htdocs
-wp core download --version="${WP_VERSION}"
+noroot wp core download --version="${WP_VERSION}"
 sudo fix-wordpress-permissions $(pwd)
 echo "Configuring WordPress..."
 sudo wp --allow-root core config --dbname="${DB_NAME}" --dbuser="${MYSQL_USER}" --dbpass="${MYSQL_PASS}" --extra-php <<'PHP'
@@ -153,9 +157,9 @@ PHP
 sudo fix-wordpress-permissions $(pwd)
 
 echo "Installing WordPress..."
-wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
+sudo -u ubuntu wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
 echo "Minifying WordPress install ..."
-wp theme delete twentythirteen ; wp theme delete twentyfourteen; wp theme delete twentyfifteen; wp theme delete twentysixteen; wp plugin delete hello; wp plugin delete akismet;
+noroot wp theme delete twentythirteen ; wp theme delete twentyfourteen; wp theme delete twentyfifteen; wp theme delete twentysixteen; wp plugin delete hello; wp plugin delete akismet;
 
 echo "Testing Install (likely see redirect for multisite registration of unknown private domain)..."
 curl -v -k https://${DOMAIN_PRIVATE}
