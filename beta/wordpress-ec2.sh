@@ -7,7 +7,7 @@ export DOMAIN=$1
 if [ -z "$DOMAIN" ] ; then
 export DOMAIN=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
 fi
-read -p 'Username: ' DOMAIN_OVERRIDE
+read -p "Override domain? (currently ${DOMAIN}): " DOMAIN_OVERRIDE
 if [ ! -z "$DOMAIN_OVERRIDE" ] ; then
 export DOMAIN=${DOMAIN_OVERRIDE}
 fi
