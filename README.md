@@ -6,6 +6,12 @@ These instructions go over setting up an EC2 instance that hosts your Node App o
 
 [Node on AWS Instructions (WIP)](node-ec2.md)
 
+## Building a WordPress App on AWS
+Description coming soon...
+```bash
+git clone https://github.com/scarstens/devops-toolkit ; sg www-data -c 'bash devops-toolkit/beta/wordpress-ec2.sh'
+```
+
 ## Using Certbot (LetsEncrypt)
 Note, is this is using HTTP_1 checker, since as of today the default checker has a security issue. Second thing to note is that you should confirm the webroot-path in case yours differes, and update the domains to match your actual domains.
 
