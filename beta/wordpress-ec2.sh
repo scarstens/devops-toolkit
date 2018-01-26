@@ -154,6 +154,9 @@ wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --ad
 echo "Minifying WordPress install ..."
 wp theme delete twentythirteen ; wp theme delete twentyfourteen; wp theme delete twentyfifteen; wp theme delete twentysixteen; wp plugin delete hello; wp plugin delete akismet;
 
+echo "Testing Install (likely see redirect for multisite registration of unknown private domain)..."
+curl -v -k https://${DOMAIN_PRIVATE}
+
 echo "Summary of install variables:"
 echo -e "Created MySQL User / PW:\n${MYSQL_USER} / ${MYSQL_PASS}"
 echo "PUBLIC_IP_DASHES=${PUBLIC_IP_DASHES}"
