@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
-echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
-
 echo "Staying up to date with apt update and upgrade"
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -16,10 +13,6 @@ echo "127.0.0.1 ${DOMAIN}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 echo "127.0.0.1 ${DOMAIN_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 echo "127.0.0.1 ${IPV4}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 echo "127.0.0.1 ${IPV4_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
-
-echo "Making ubuntu's primary group www-data to match php/nginx group for easier permissioning..."
-#sudo usermod -g www-data ubuntu
-exec sg www-data newgrp `id -gn`
 
 echo "Build all the params you need for the install..."
 ## TODO: allow passing these vars into the script
