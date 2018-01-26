@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-alias noroot="sudo -Eu www-data"
 echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
 echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
 
@@ -140,7 +139,7 @@ sudo chmod 775 /var/www/wordpress/htdocs
 
 echo "Downloading WordPress..."
 cd /var/www/wordpress/htdocs
-noroot www-data wp core download --version="${WP_VERSION}"
+sudo -Eu www-data wp core download --version="${WP_VERSION}"
 sudo fix-wordpress-permissions $(pwd)
 echo "Configuring WordPress..."
 sudo wp --allow-root core config --dbname="${DB_NAME}" --dbuser="${MYSQL_USER}" --dbpass="${MYSQL_PASS}" --extra-php <<'PHP'
@@ -157,9 +156,9 @@ PHP
 sudo fix-wordpress-permissions $(pwd)
 
 echo "Installing WordPress..."
-noroot wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
+sudo -Eu www-data wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
 echo "Minifying WordPress install ..."
-noroot wp theme delete twentythirteen ; sudo -u www-data wp theme delete twentyfourteen; sudo -u www-data wp theme delete twentyfifteen; sudo -u www-data wp theme delete twentysixteen; sudo -u www-data wp plugin delete hello; sudo -u www-data wp plugin delete akismet;
+sudo -Eu www-data wp theme delete twentythirteen ; sudo -u www-data wp theme delete twentyfourteen; sudo -u www-data wp theme delete twentyfifteen; sudo -u www-data wp theme delete twentysixteen; sudo -u www-data wp plugin delete hello; sudo -u www-data wp plugin delete akismet;
 
 echo "Testing Install (likely see redirect for multisite registration of unknown private domain)..."
 curl -v -k https://${DOMAIN_PRIVATE}
