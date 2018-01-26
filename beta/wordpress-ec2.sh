@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
-# TODO: handle sudo unable to resolve host
-sudo true
-## TODO: grep just the hostname out of this and store in a var
-## TODO: use the var and echo a line into the /etc/hosts file with 127.0.0.1 $VAR
+echo "Staying up to date with apt update and upgrade"
+sudo apt-get update
+sudo apt-get upgrade -y
 
-# LEMP
+echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
+echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+
+echo "Making ubuntu's primary group www-data to match php/nginx group for easier permissioning..."
+sudo usermod -g www-data ubuntu
+sudo su - ubuntu
+
+echo "Build all the params you need for the install..."
+## TODO: allow passing these vars into the script
 export MYSQL_USER="nginx"
 export MYSQL_PASS=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
 export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-")
@@ -15,22 +22,14 @@ export WP_VERSION="latest"
 export DB_NAME="wordpress"
 export DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo usermod -aG www-data ubuntu
-sudo su - ubuntu
-
+echo "Install the LEMP stack..."
+echo " Start with nginx, and validate it built a proper config file..."
 sudo apt-get install nginx -y
+sudo nginx -t
+echo " Install MySQL (mariadb for btter performance)..."
 sudo apt-get install mariadb-server mariadb-client -y
 
-# secure mysql from install defaults
-sudo mysql -e "CREATE USER '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASS}';"
-sudo mysql -e "GRANT ALL PRIVILEGES ON * . * TO '${MYSQL_USER}'@'localhost';"
-sudo mysql -e "FLUSH PRIVILEGES;"
-echo "Created MySQL User / PW:"
-echo ${MYSQL_USER}
-echo ${MYSQL_PASS}
-
+echo " Securing MySQL defaults..."
 sudo mysql -t<<'string'
 UPDATE mysql.user SET Password=PASSWORD('root') WHERE User='root';
 DELETE FROM mysql.user WHERE User='';
@@ -40,15 +39,26 @@ DELETE FROM mysql.db WHERE Db='test' OR Db='test\\_%';
 FLUSH PRIVILEGES;
 string
 
+echo " Creating new mysql user for application..."
+sudo mysql -e "CREATE USER '${MYSQL_USER}'@'localhost' IDENTIFIED BY '${MYSQL_PASS}';"
+sudo mysql -e "GRANT ALL PRIVILEGES ON * . * TO '${MYSQL_USER}'@'localhost';"
+sudo mysql -e "FLUSH PRIVILEGES;"
+echo -e "Created MySQL User / PW:\n${MYSQL_USER} / ${MYSQL_PASS}"
+
+
+echo "Installing and setting up PHP"
 sudo apt-get install php-fpm php-mysql -y
+echo " Preparing standing folders and files for PHP/Nginx config"
 sudo mkdir -p /var/www/wordpress/htdocs
 sudo mkdir -p /var/www/wordpress/logs
 sudo mkdir -p /var/www/wordpress/certs
 sudo touch /var/www/wordpress/logs/error.log
 sudo chown -R www-data:www-data /var/www
+sudo chmod -R 0775 /var/www
+echo " Removing Nginx default configuration (it conflicts with WordPress configs)"
 sudo rm /etc/nginx/sites-enabled/default
 
-# Build nginx configuration default the public IP to the server name
+echo " Build nginx configuration default the public IP to the server name"
 sudo tee /etc/nginx/sites-available/wordpress <<EOF
 server {
     listen      80;
@@ -56,16 +66,12 @@ server {
     listen 443 ssl;
     listen [::]:443 ssl;
     error_log /var/www/wordpress/logs/error.log;
-	root /var/www/wordpress/htdocs;
-
-	# Add index.php to the list if you are using PHP
-	index index.php index.html index.htm index.nginx-debian.html;
-
-	server_name ${DOMAIN};
-
-	location / {
-		try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
-	}
+    root /var/www/wordpress/htdocs;
+    index index.php index.html index.htm index.nginx-debian.html;
+    server_name ${DOMAIN};
+    location / {
+        try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
+    }
 
     location ~ \.php$ {
         try_files \$uri =404;
@@ -371,3 +377,6 @@ echo "Installing WordPress [::364]..."
 wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
 echo "Minifying WordPress install ..."
 wp theme delete twentythirteen ; wp theme delete twentyfourteen; wp theme delete twentyfifteen; wp theme delete twentysixteen; wp plugin delete hello; wp plugin delete akismet;
+
+echo "Summary of install variables:"
+echo -e "Created MySQL User / PW:\n${MYSQL_USER} / ${MYSQL_PASS}"
