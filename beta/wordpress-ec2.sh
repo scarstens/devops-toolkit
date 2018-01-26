@@ -10,10 +10,10 @@ export IPV4_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4
 
 echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
 echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
-echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts 2>&1 /dev/null
-echo "127.0.0.1 $(DOMAIN_PRIVATE)" | sudo tee -a /etc/hosts 2>&1 /dev/null
-echo "127.0.0.1 $(IPV4)" | sudo tee -a /etc/hosts 2>&1 /dev/null
-echo "127.0.0.1 $(IPV4_PRIVATE)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 ${DOMAIN}" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 ${DOMAIN_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 ${IPV4}" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 ${IPV4_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 
 echo "Making ubuntu's primary group www-data to match php/nginx group for easier permissioning..."
 sudo usermod -g www-data ubuntu
