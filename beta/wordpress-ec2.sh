@@ -3,8 +3,8 @@ echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
 echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
 
 echo "Staying up to date with apt update and upgrade..."
-sudo apt-get update 2>&1 /dev/null
-sudo apt-get upgrade -y 2>&1 /dev/null
+sudo apt-get update -qq
+sudo apt-get upgrade -y
 
 export DOMAIN=$1
 if [ -z "$DOMAIN" ] ; then
