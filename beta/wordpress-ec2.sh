@@ -19,7 +19,7 @@ echo "127.0.0.1 ${IPV4_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 
 echo "Making ubuntu's primary group www-data to match php/nginx group for easier permissioning..."
 sudo usermod -g www-data ubuntu
-exec su -l $USER
+exec sudo su -l $USER
 
 echo "Build all the params you need for the install..."
 ## TODO: allow passing these vars into the script
