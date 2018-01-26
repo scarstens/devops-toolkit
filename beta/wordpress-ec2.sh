@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
+echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+
 echo "Staying up to date with apt update and upgrade"
 sudo apt-get update
 sudo apt-get upgrade -y
@@ -8,8 +11,7 @@ export DOMAIN_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/hostname
 export IPV4=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 export IPV4_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
 
-echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
-echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "Adding domains and IP's to local hosts file"
 echo "127.0.0.1 ${DOMAIN}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 echo "127.0.0.1 ${DOMAIN_PRIVATE}" | sudo tee -a /etc/hosts 2>&1 /dev/null
 echo "127.0.0.1 ${IPV4}" | sudo tee -a /etc/hosts 2>&1 /dev/null
