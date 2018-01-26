@@ -14,6 +14,7 @@ echo "Build all the params you need for the install..."
 ## TODO: allow passing these vars into the script
 export MYSQL_USER="nginx"
 export MYSQL_PASS=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
+export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-" | cut -d '"' -f2)
 export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-")
 export DOMAIN="ec2-$PUBLIC_IP_DASHES.us-east-2.compute.amazonaws.com"
 export WP_VERSION="latest"
