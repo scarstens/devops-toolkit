@@ -140,7 +140,7 @@ sudo chmod 775 /var/www/wordpress/htdocs
 
 echo "Downloading WordPress..."
 cd /var/www/wordpress/htdocs
-sudo -Eu www-data wp core download --version="${WP_VERSION}"
+noroot www-data wp core download --version="${WP_VERSION}"
 sudo fix-wordpress-permissions $(pwd)
 echo "Configuring WordPress..."
 sudo wp --allow-root core config --dbname="${DB_NAME}" --dbuser="${MYSQL_USER}" --dbpass="${MYSQL_PASS}" --extra-php <<'PHP'
@@ -157,9 +157,9 @@ PHP
 sudo fix-wordpress-permissions $(pwd)
 
 echo "Installing WordPress..."
-sudo -Eu www-data -i -- wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
+noroot wp core multisite-install --subdomains --url="${DOMAIN}" --quiet --title="" --admin_email="webapp@wordpress.local"
 echo "Minifying WordPress install ..."
-sudo -u www-data -i -- wp theme delete twentythirteen ; sudo -u www-data -i -- wp theme delete twentyfourteen; sudo -u www-data -i -- wp theme delete twentyfifteen; sudo -u www-data -i -- wp theme delete twentysixteen; sudo -u www-data -i -- wp plugin delete hello; sudo -u www-data -i -- wp plugin delete akismet;
+noroot wp theme delete twentythirteen ; sudo -u www-data wp theme delete twentyfourteen; sudo -u www-data wp theme delete twentyfifteen; sudo -u www-data wp theme delete twentysixteen; sudo -u www-data wp plugin delete hello; sudo -u www-data wp plugin delete akismet;
 
 echo "Testing Install (likely see redirect for multisite registration of unknown private domain)..."
 curl -v -k https://${DOMAIN_PRIVATE}
