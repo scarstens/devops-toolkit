@@ -3,8 +3,17 @@ echo "Staying up to date with apt update and upgrade"
 sudo apt-get update
 sudo apt-get upgrade -y
 
+export DOMAIN=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+export DOMAIN_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/hostname)
+export IPV4=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
+export IPV4_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
+
 echo "Fixing unable to resolve hosts when VPC doesn't allow DNS hostnames..."
 echo "127.0.0.1 $(hostname)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 $(DOMAIN)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 $(DOMAIN_PRIVATE)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 $(IPV4)" | sudo tee -a /etc/hosts 2>&1 /dev/null
+echo "127.0.0.1 $(IPV4_PRIVATE)" | sudo tee -a /etc/hosts 2>&1 /dev/null
 
 echo "Making ubuntu's primary group www-data to match php/nginx group for easier permissioning..."
 sudo usermod -g www-data ubuntu
@@ -14,9 +23,6 @@ echo "Build all the params you need for the install..."
 ## TODO: allow passing these vars into the script
 export MYSQL_USER="nginx"
 export MYSQL_PASS=$(date +%s | sha256sum | base64 | head -c 32 ; echo)
-export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-" | cut -d '"' -f2)
-export PUBLIC_IP_DASHES=$(echo $PUBLIC_IP | tr  "."  "-")
-export DOMAIN="ec2-$PUBLIC_IP_DASHES.us-east-2.compute.amazonaws.com"
 export WP_VERSION="latest"
 export DB_NAME="wordpress"
 export DB_NAME=${DB_NAME//[\\\/\.\<\>\:\"\'\|\?\!\*-]/}
@@ -67,7 +73,7 @@ server {
     error_log /var/www/wordpress/logs/error.log;
     root /var/www/wordpress/htdocs;
     index index.php index.html index.htm index.nginx-debian.html;
-    server_name ${DOMAIN};
+    server_name ${DOMAIN} ${DOMAIN_PRIVATE} ${IPV4} ${IPV4_PRIVATE};
     location / {
         try_files \$uri \$uri/ /index.php?q=\$uri&\$args;
     }
