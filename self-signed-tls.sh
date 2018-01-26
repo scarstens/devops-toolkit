@@ -172,6 +172,7 @@ subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = ${CN}
+DNS.2 = *.${CN}
 EOF
 }
 
