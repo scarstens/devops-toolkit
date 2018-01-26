@@ -9,7 +9,7 @@ These instructions go over setting up an EC2 instance that hosts your Node App o
 ## Building a WordPress App on AWS
 Description coming soon...
 ```bash
-git clone https://github.com/scarstens/devops-toolkit ; sg www-data -c 'bash devops-toolkit/beta/wordpress-ec2.sh'
+git clone https://github.com/scarstens/devops-toolkit ; sudo sg www-data -c 'bash devops-toolkit/beta/wordpress-ec2.sh'
 ```
 
 ## Using Certbot (LetsEncrypt)
