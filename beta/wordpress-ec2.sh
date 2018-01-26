@@ -3,7 +3,15 @@ echo "Staying up to date with apt update and upgrade"
 sudo apt-get update
 sudo apt-get upgrade -y
 
+export DOMAIN=$1
+if [ -z "$DOMAIN" ] ; then
 export DOMAIN=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname)
+fi
+read -p 'Username: ' DOMAIN_OVERRIDE
+if [ ! -z "$DOMAIN_OVERRIDE" ] ; then
+export DOMAIN=${DOMAIN_OVERRIDE}
+fi
+echo "Domain set to ${DOMAIN}"
 export DOMAIN_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/hostname)
 export IPV4=$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)
 export IPV4_PRIVATE=$(curl -s http://169.254.169.254/latest/meta-data/local-ipv4)
