@@ -18,5 +18,8 @@ Note, is this is using HTTP_1 checker, since as of today the default checker has
 Before you run this command, remember that this assumes you are using Nginx to proxy your HTTP connections to browser clients. Secondly, that you need to have an Nginx config where the "server_name" field matches the domain name(s) that you are requesting signed SSL certificates for. This allows the command to automaitcally update your nginx config to load the certificates for you.
 
 ```bash
+sudo add-apt-repository ppa:certbot/certbot -y
+sudo apt-get update
+sudo apt-get install python-certbot-nginx -y
 sudo certbot --authenticator webroot --webroot-path /var/www/wordpress/htdocs --installer nginx -d yourdomain.com -d sub.yourdomain.com
 ```
