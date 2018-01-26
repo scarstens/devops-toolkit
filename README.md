@@ -23,3 +23,6 @@ sudo apt-get update
 sudo apt-get install python-certbot-nginx -y
 sudo certbot --authenticator webroot --webroot-path /var/www/wordpress/htdocs --installer nginx -d yourdomain.com -d sub.yourdomain.com
 ```
+
+## PAM - SSH Agent for Sudo Auth
+http://evans.io/legacy/posts/ssh-agent-for-sudo-authentication/
