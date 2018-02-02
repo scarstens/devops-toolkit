@@ -26,3 +26,8 @@ sudo certbot --authenticator webroot --webroot-path /var/www/wordpress/htdocs --
 
 ## PAM - SSH Agent for Sudo Auth
 http://evans.io/legacy/posts/ssh-agent-for-sudo-authentication/
+
+# Fix and reset permissions of WordPress files
+```bash
+sudo bash devops-toolkit/fix-wordpress-permissions.sh /var/www/wordpress/htdocs/
+```
