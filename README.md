@@ -29,5 +29,5 @@ http://evans.io/legacy/posts/ssh-agent-for-sudo-authentication/
 
 # Fix and reset permissions of WordPress files
 ```bash
-sudo bash devops-toolkit/fix-wordpress-permissions.sh /var/www/wordpress/htdocs/
+sudo bash ~/devops-toolkit/fix-wordpress-permissions.sh /var/www/wordpress/htdocs/
 ```
