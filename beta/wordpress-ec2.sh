@@ -64,6 +64,8 @@ sudo mkdir -p /var/www/wordpress/htdocs
 sudo mkdir -p /var/www/wordpress/logs
 sudo mkdir -p /var/www/wordpress/certs
 sudo touch /var/www/wordpress/logs/error.log
+sudo touch /var/www/wordpress/logs/debug.log
+sudo touch /var/www/wordpress/logs/access.log
 sudo chown -R www-data:www-data /var/www
 sudo chmod -R 0775 /var/www
 echo " Removing Nginx default configuration (it conflicts with WordPress configs)"
