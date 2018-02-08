@@ -196,6 +196,6 @@ build() {
 }
 
 checkVariables
-build 2>&1 /dev/null
+build
 # showVals
 safeExit
