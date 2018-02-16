@@ -58,7 +58,7 @@ echo -e "Created MySQL User / PW:\n${MYSQL_USER} / ${MYSQL_PASS}"
 
 
 echo "Installing and setting up PHP"
-sudo apt-get install php-fpm php-mysql php-xml php-mbstring php-imagick -y
+sudo apt-get install php-fpm php-mysql php-xml php-mbstring php-imagick php-curl -y
 echo " Preparing standing folders and files for PHP/Nginx config"
 sudo mkdir -p /var/www/wordpress/htdocs
 sudo mkdir -p /var/www/wordpress/logs
