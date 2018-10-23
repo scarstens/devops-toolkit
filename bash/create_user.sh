@@ -8,7 +8,7 @@ if id -u $un >/dev/null 2>&1; then
 fi
 
 # Assumed Else
-sudo adduser --disabled-password --gecos "" $un
+sudo adduser -g www-data --disabled-password --gecos "" $un
 echo "added user: $un"
 echo "paste public key:"
 read key
